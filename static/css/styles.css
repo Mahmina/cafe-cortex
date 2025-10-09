@@ -1,0 +1,26 @@
+.join-btn {
+    background-color: #4FB7B3;
+    border: none;
+}
+
+.join-btn:hover {
+    background-color: #44A19E;
+}
+
+.feature-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: .75rem;
+    background-color: #4FB7B3;
+}
+
+.feature-icon img {
+    filter: brightness(0) invert(1);
+}
+
+.feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
