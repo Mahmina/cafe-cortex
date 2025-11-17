@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, current_app
 from flask_bootstrap import Bootstrap5
 from dotenv import load_dotenv
+from flask_wtf import CSRFProtect
 from werkzeug.utils import secure_filename
 from forms import SignUpForm, CreateCafeForm
 from flask_sqlalchemy import SQLAlchemy
@@ -11,7 +12,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get("FLASK_KEY")
+app.config['SECRET_KEY'] = os.environ.get("FLASK_KEY", "dev_secret_key")
 bootstrap = Bootstrap5(app)
 
 
@@ -22,6 +23,7 @@ class Base(DeclarativeBase):
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cafes.db"
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
+csrf = CSRFProtect(app)
 
 
 class Cafe(db.Model):
