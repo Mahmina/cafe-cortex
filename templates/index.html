@@ -14,7 +14,7 @@
   <div class="carousel-inner">
     <div class="carousel-item active">
 
-      <img src="../static/assets/img/carousel-1.jpg"
+      <img src="{{ url_for('static', filename='assets/img/carousel-1.jpg') }}"
            class="d-block w-100"
            style="height: 600px; object-fit: cover; filter: brightness(70%);"
            alt="Friends enjoying coffee and laughter in a café"
@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="carousel-item">
-      <img src="../static/assets/img/carousel-2.jpg"
+      <img src="{{ url_for('static', filename='assets/img/carousel-2.jpg') }}"
            class="d-block w-100"
            style="height: 600px; object-fit: cover; filter: brightness(70%);"
            alt="People clinking coffee cups together in a café"
@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="carousel-item">
-      <img src="../static/assets/img/carousel-3.jpg"
+      <img src="{{ url_for('static', filename='assets/img/carousel-3.jpg') }}"
            class="d-block w-100"
            style="height: 600px; object-fit: cover; filter: brightness(70%);"
            alt="Fresh bread and a café menu"
@@ -68,21 +68,21 @@
   <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
     <div class="feature col">
       <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-        <img src="../static/assets/svg/laptop.svg" alt="laptop" height="27">
+        <img src="{{ url_for('static', filename='assets/svg/laptop.svg') }}" alt="laptop" height="27">
       </div>
       <h3 class="fs-3 text-body-emphasis">Stay Powered</h3>
       <p>Discover spots where your coffee and your battery never run out.</p>
     </div>
     <div class="feature col">
       <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-        <img src="../static/assets/svg/book-fill.svg" alt="book" height="27">
+        <img src="{{ url_for('static', filename='assets/svg/book-fill.svg') }}" alt="book" height="27">
       </div>
       <h3 class="fs-3 text-body-emphasis">Be Productive</h3>
       <p>Study, create, or work in cafés made for your mind to thrive.</p>
     </div>
     <div class="feature col">
       <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-        <img src="../static/assets/svg/people-fill.svg" alt="people" height="27">
+        <img src="{{ url_for('static', filename='assets/svg/people-fill.svg') }}" alt="people" height="27">
       </div>
       <h3 class="fs-3 text-body-emphasis">Friendly Circle</h3>
       <p>Spaces where like-minded people meet, study groups form, and ideas are exchanged.</p>
@@ -96,7 +96,7 @@
 <div class="container col-xxl-9 px-4 py-5">
   <div class="row flex-lg-row-reverse align-items-center g-5 py-3">
     <div class="col-10 col-sm-8 col-lg-4">
-      <img src="../static/assets/img/sachsen.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+      <img src="{{ url_for('static', filename='assets/img/sachsen.jpg') }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
     </div>
     <div class="col-lg-8">
       <p class="lead">

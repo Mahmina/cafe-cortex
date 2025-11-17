@@ -1,6 +1,9 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from wtforms import StringField
-from wtforms.fields.simple import EmailField, PasswordField, SubmitField
+from wtforms.fields.choices import SelectField
+from wtforms.fields.datetime import TimeField
+from wtforms.fields.simple import EmailField, PasswordField, SubmitField, FileField
 from wtforms.validators import DataRequired
 
 
@@ -10,3 +13,17 @@ class SignUpForm(FlaskForm):
     email = EmailField("Email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Sign Up")
+
+
+class CreateCafeForm(FlaskForm):
+    name = StringField("Café Name", validators=[DataRequired()])
+    location_url = StringField("Café Location", validators=[DataRequired()])
+    opening_time = TimeField("Opening Time", validators=[DataRequired()])
+    closing_time = TimeField("Closing Time", validators=[DataRequired()])
+    address = StringField("Café Address", validators=[DataRequired()])
+    rating = StringField("Café Rating", validators=[DataRequired()])
+    wifi = SelectField("Has Wifi", choices=[('yes', 'Yes'),('no', 'No')])
+    power_outlet = SelectField("Power Outlet Available", choices=[('yes', 'Yes'),('no', 'No')])
+    image = FileField("Café Photo", validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
+    submit = SubmitField("Submit")
+
