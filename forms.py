@@ -17,13 +17,14 @@ class SignUpForm(FlaskForm):
 
 class CreateCafeForm(FlaskForm):
     name = StringField("Café Name", validators=[DataRequired()])
-    location_url = StringField("Café Location", validators=[DataRequired()])
+    city = SelectField("City", coerce=int, validators=[DataRequired()])
+    website_url = StringField("Café Website URL", validators=[DataRequired()])
     opening_time = TimeField("Opening Time", validators=[DataRequired()])
     closing_time = TimeField("Closing Time", validators=[DataRequired()])
-    address = StringField("Café Address", validators=[DataRequired()])
+    address = StringField("Street, ZIP Code", validators=[DataRequired()])
     rating = StringField("Café Rating", validators=[DataRequired()])
     wifi = SelectField("Has Wifi", choices=[('yes', 'Yes'),('no', 'No')])
-    power_outlet = SelectField("Power Outlet Available", choices=[('yes', 'Yes'),('no', 'No')])
+    power_outlet = SelectField("Power Outlet Available", choices=[('yes', 'Yes'), ('no', 'No')])
     image = FileField("Café Photo", validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
     submit = SubmitField("Submit")
 

@@ -18,7 +18,7 @@
             <p class="card-text">{{ cafe.address }}</p>
         </div>
 
-        <a href="#" class="btn btn-primary website-btn mt-2">Café Website</a>
+        <a href="{{ cafe.website_url }}" target="_blank" class="btn btn-primary website-btn mt-2">Café Website</a>
     </div>
   </div>
   {% endfor %}

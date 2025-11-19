@@ -3,8 +3,9 @@
     border: none;
 }
 
-.join-btn:hover {
-    background-color: #44A19E;
+.join-btn:hover,
+.join-btn:active {
+    background-color: #44A19E !important;
 }
 
 .feature-icon {
@@ -41,10 +42,10 @@
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     background-color: #E0E0E0;
     padding: 2rem 0.5rem;
-
     margin: 1rem;
     border-radius: 0.7rem;
     column-gap: 0.5rem;
+    row-gap: 1rem;
 }
 
 #city {

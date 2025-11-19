@@ -5,8 +5,8 @@ from flask_wtf import CSRFProtect
 from werkzeug.utils import secure_filename
 from forms import SignUpForm, CreateCafeForm
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import Integer, String, ForeignKey
 import os
 
 load_dotenv()
@@ -14,6 +14,7 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("FLASK_KEY", "dev_secret_key")
 bootstrap = Bootstrap5(app)
+csrf = CSRFProtect(app)
 
 
 class Base(DeclarativeBase):
@@ -23,7 +24,14 @@ class Base(DeclarativeBase):
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cafes.db"
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
-csrf = CSRFProtect(app)
+
+
+class City(db.Model):
+    __tablename__ = "cities"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    city_name: Mapped[str] = mapped_column(String(100))
+    cafes: Mapped[list["Cafe"]] = relationship("Cafe", back_populates="city")
 
 
 class Cafe(db.Model):
@@ -31,7 +39,11 @@ class Cafe(db.Model):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(200))
-    location_url: Mapped[str] = mapped_column(String(200), unique=True)
+
+    city_id: Mapped[int] = mapped_column(ForeignKey("cities.id"))
+    city: Mapped["City"] = relationship("City", back_populates="cafes")
+
+    website_url: Mapped[str] = mapped_column(String(200), unique=True)
     opening_time: Mapped[str] = mapped_column(String(100))
     closing_time: Mapped[str] = mapped_column(String(100))
     address: Mapped[str] = mapped_column(String(300))
@@ -43,23 +55,6 @@ class Cafe(db.Model):
 
 with app.app_context():
     db.create_all()
-
-# CREATE RECORD
-# with app.app_context():
-#     new_cafe = Cafe(
-#         id=1,
-#         name="STAY - BLEIBDOCHNOCH",
-#         location_url="https://www.google.com/maps/place//data=!4m2!3m1!1s0x47a6f9844873159f:0x8840f9cb796fa589?sa=X&ved=1t:8290&ictx=111",
-#         opening_time="10:00 AM",
-#         closing_time="06:00 PM",
-#         address= "Dresdner Str. 79, 04317 Leipzig",
-#         rating="4.4",
-#         wifi="Yes",
-#         power_outlet="Yes",
-#         image_file="assets/uploads/bleib-doch-noch.jpg"
-#     )
-#     db.session.add(new_cafe)
-#     db.session.commit()
 
 
 @app.route("/")
@@ -83,6 +78,11 @@ def show_cafes():
 @app.route("/add", methods=["GET", "POST"])
 def add_cafe():
     form = CreateCafeForm()
+
+    result = db.session.execute(db.select(City).order_by(City.city_name))
+    all_cities = result.scalars().all()
+    form.city.choices = [(city.id, city.city_name) for city in all_cities]
+
     if form.validate_on_submit():
         image_filename = None
         if form.image.data:
@@ -93,9 +93,11 @@ def add_cafe():
             upload_path = os.path.join(upload_folder, filename)
             form.image.data.save(upload_path)
             image_filename = f"assets/uploads/{filename}"
+
         new_cafe = Cafe(
             name=form.name.data.upper(),
-            location_url=form.location_url.data,
+            city_id=form.city.data,
+            website_url=form.website_url.data,
             opening_time=form.opening_time.data.strftime("%I:%M %p"),
             closing_time=form.closing_time.data.strftime("%I:%M %p"),
             rating=form.rating.data,
