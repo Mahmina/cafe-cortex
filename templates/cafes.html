@@ -3,40 +3,45 @@
 {% block title %}Café Cortex{% endblock %}
 
 {% block content %}
-<h2 id="city" class="text-center">Leipzig</h2>
-<div class="cafes-container">
-  <!-- Show café cards only if there are cafes in the database -->
-  {% if all_cafes %}
-  {% for cafe in all_cafes %}
-  <div class="card" style="width: 18rem;">
-    <img src="{{ url_for('static', filename=cafe.image_file) }}" height="190rem" class="card-img-top" alt="{{ cafe.name }}">
-    <div class="card-body d-flex flex-column justify-content-between" style="height: 13rem;">
-        <div>
-            <h5 class="card-title fs-6">{{ cafe.name }}</h5>
-            <i class="bi bi-clock"></i>
-            <span style="font-size: 0.9rem;">{{ cafe.opening_time }}</span><span> - </span><span style="font-size: 0.9rem;">{{ cafe.closing_time }}</span>
-            <p class="card-text">{{ cafe.address }}</p>
+
+{% for city in cities %}
+    <h2 id="city" class="text-center">{{ city.city_name.capitalize() }}</h2>
+    <div class="cafes-container">
+      <!-- Show café cards only if there are cafes in the database -->
+      {% if city.cafes %}
+      {% for cafe in city.cafes %}
+      <div class="card" style="width: 18rem;">
+        {% if cafe.image_file %}
+          <img src="{{ url_for('static', filename=cafe.image_file) }}" height="190rem" class="card-img-top" alt="{{ cafe.name }}">
+        {% else %}
+          <img src="{{ url_for('static', filename='assets/uploads/default-image.jpg') }}" height="190rem" class="card-img-top" alt="{{ cafe.name }}">
+        {% endif %}
+        <div class="card-body d-flex flex-column justify-content-between" style="height: 13rem;">
+            <div>
+                <h5 class="card-title fs-6">{{ cafe.name }}</h5>
+                <i class="bi bi-clock"></i>
+                <span style="font-size: 0.9rem;">{{ cafe.opening_time }}</span><span> - </span><span style="font-size: 0.9rem;">{{ cafe.closing_time }}</span>
+                <p class="card-text">{{ cafe.address }}</p>
+            </div>
+
+            <a href="{{ cafe.website_url }}" target="_blank" class="btn btn-primary website-btn mt-2">Café Website</a>
         </div>
-
-        <a href="{{ cafe.website_url }}" target="_blank" class="btn btn-primary website-btn mt-2">Café Website</a>
-    </div>
-  </div>
-  {% endfor %}
-  {% endif %}
-
-  <!-- Always show the suggestion card -->
-  <div class="card" style="width: 18rem;">
-    <a class="suggest-cafe text-center" href="{{ url_for('add_cafe') }}">
-      <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="gray" class="bi bi-plus-circle mt-4" viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-      </svg>
-      <div class="card-body mt-3">
-        <h5 class="card-title">SUGGEST A PLACE</h5>
-        <p class="card-text">Where is your favourite spot</p>
       </div>
-    </a>
-  </div>
-
-</div>
+      {% endfor %}
+      {% endif %}
+      <!-- Always show the suggestion card -->
+      <div class="card" style="width: 18rem;">
+        <a class="suggest-cafe text-center" href="{{ url_for('add_cafe') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="gray" class="bi bi-plus-circle mt-4" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+          </svg>
+          <div class="card-body mt-3">
+            <h5 class="card-title">SUGGEST A PLACE</h5>
+            <p class="card-text">Where is your favourite spot</p>
+          </div>
+        </a>
+      </div>
+    </div>
+{% endfor %}
 {% endblock %}

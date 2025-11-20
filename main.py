@@ -70,9 +70,9 @@ def signup():
 
 @app.route("/cafes")
 def show_cafes():
-    result = db.session.execute(db.select(Cafe))
-    cafes = result.scalars().all()
-    return render_template("cafes.html", all_cafes=cafes)
+    result = db.session.execute(db.select(City))
+    cities = result.scalars().all()
+    return render_template("cafes.html", cities=cities)
 
 
 @app.route("/add", methods=["GET", "POST"])
