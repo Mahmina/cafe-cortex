@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, current_app
+from flask import Flask, render_template, redirect, url_for, current_app, flash
 from flask_bootstrap import Bootstrap5
 from dotenv import load_dotenv
 from flask_wtf import CSRFProtect
@@ -86,6 +86,15 @@ def home():
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
+
+        # Check if user email is already present in the database.
+        result = db.session.execute(db.select(User).where(User.email == form.email.data))
+        user = result.scalar()
+        if user:
+            # User already exists
+            flash("This email already exist, please log in!")
+            return redirect(url_for('login'))
+
         hash_and_salted_password = generate_password_hash(
             form.password.data,
             method='pbkdf2:sha256',
