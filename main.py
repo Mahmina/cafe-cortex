@@ -2,11 +2,13 @@ from flask import Flask, render_template, redirect, url_for, current_app
 from flask_bootstrap import Bootstrap5
 from dotenv import load_dotenv
 from flask_wtf import CSRFProtect
+from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from forms import SignUpForm, CreateCafeForm
+from forms import SignUpForm,LoginForm,  CreateCafeForm
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, ForeignKey
+from flask_login import LoginManager, login_user, UserMixin
 import os
 
 load_dotenv()
@@ -24,6 +26,9 @@ class Base(DeclarativeBase):
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cafes.db"
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
 class City(db.Model):
@@ -53,8 +58,23 @@ class Cafe(db.Model):
     image_file: Mapped[str] = mapped_column(String(255), nullable=True)
 
 
+class User(UserMixin, db.Model):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(100))
+    surname: Mapped[str] = mapped_column(String(100))
+    email: Mapped[str] = mapped_column(String(100), unique=True)
+    password: Mapped[str] = mapped_column(String(100))
+
+
 with app.app_context():
     db.create_all()
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.get_or_404(User, user_id)
 
 
 @app.route("/")
@@ -65,7 +85,39 @@ def home():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignUpForm()
+    if form.validate_on_submit():
+        hash_and_salted_password = generate_password_hash(
+            form.password.data,
+            method='pbkdf2:sha256',
+            salt_length=10
+        )
+        new_user = User(
+            name=form.name.data,
+            surname=form.surname.data,
+            email=form.email.data,
+            password=hash_and_salted_password,
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        login_user(new_user)
+        return redirect(url_for("home"))
     return render_template("signup.html", form=form)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        result = db.session.execute(db.select(User).where(User.email == email))
+        user = result.scalar()
+
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for("home"))
+    return render_template("login.html", form=form)
 
 
 @app.route("/cafes")

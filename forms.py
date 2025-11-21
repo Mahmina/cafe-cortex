@@ -12,7 +12,13 @@ class SignUpForm(FlaskForm):
     surname = StringField("Surname", validators=[DataRequired()])
     email = EmailField("Email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
-    submit = SubmitField("Sign Up")
+    submit = SubmitField("Sign Me Up")
+
+
+class LoginForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    submit = SubmitField("Let Me In!")
 
 
 class CreateCafeForm(FlaskForm):

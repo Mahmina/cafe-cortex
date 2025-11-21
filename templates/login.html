@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% from "bootstrap5/form.html" import render_form %}
+
+{% block content %}
+
+<main class="mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <h1 class="text-center mt-5 mb-5">Welcome to Café Cortex</h1>
+        <h5 class="text-center mb-5 text-secondary">
+          Log in and find a place <br>
+          to think and create
+        </h5>
+          {{ render_form(form, novalidate=True) }}
+      </div>
+    </div>
+    <div>
+      <p class="text-center mt-5">Don't have an account?
+        <a href="{{ url_for('signup') }}" class="link-primary link-opacity-75-hover fw-bold">Sign Up</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+{% endblock %}
