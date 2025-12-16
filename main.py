@@ -118,12 +118,18 @@ def signup():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        email = form.email.data
+        email = form.email.data  # Email in db is unique
         password = form.password.data
         result = db.session.execute(db.select(User).where(User.email == email))
         user = result.scalar()
 
-        if user and check_password_hash(user.password, password):
+        if not user:
+            flash("Email does not exist. Please try again.")
+            return redirect(url_for('login'))
+        elif not check_password_hash(user.password, password):
+            flash("Password incorrect. Please try again.")
+            return redirect(url_for('login'))
+        else:
             login_user(user)
             return redirect(url_for("home"))
     return render_template("login.html", form=form)
