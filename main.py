@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, current_app, flash
+from flask import Flask, render_template, redirect, url_for, current_app, flash, request, session
 from flask_bootstrap import Bootstrap5
 from dotenv import load_dotenv
 from flask_wtf import CSRFProtect
@@ -8,7 +8,7 @@ from forms import SignUpForm,LoginForm,  CreateCafeForm
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, ForeignKey
-from flask_login import LoginManager, login_user, UserMixin
+from flask_login import LoginManager, login_user, UserMixin, current_user, login_required, logout_user
 import os
 
 load_dotenv()
@@ -111,7 +111,7 @@ def signup():
 
         login_user(new_user)
         return redirect(url_for("home"))
-    return render_template("signup.html", form=form)
+    return render_template("signup.html", form=form, current_user=current_user)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -132,7 +132,14 @@ def login():
         else:
             login_user(user)
             return redirect(url_for("home"))
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form, current_user=current_user)
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
 
 
 @app.route("/cafes")

@@ -84,3 +84,24 @@
   box-shadow: none !important;
 }
 
+.nav {
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.user-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 200rem;
+    background-color: #4FB7B3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    object-fit: cover;
+    margin-left: 0.8rem;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+}
+
